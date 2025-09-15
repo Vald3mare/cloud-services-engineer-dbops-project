@@ -13,14 +13,12 @@ jobs:
     #### Добавьте шаг с Flyway-миграциями
     - name: Flyway-install
       run: |
-        curl -L -o flyway-commandline.tar.gz "https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/11.1.0/flyway-commandline-11.1.0-linux-x64.tar.gz"
-        tar -xzf flyway-commandline.tar.gz
-        echo "$PWD/flyway-11.1.0" >> $GITHUB_PATH
-
-    - name: Flyway-migrate
-      run:    
-        flyway -url=jdbc:postgresql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/store -user=${{ secrets.DB_USER }} -password=${{ secrets.DB_PASSWORD }} -configFiles="./flyway.conf" migrate
-
+        docker pull flyway/flyway
+        docker run --rm --network host -v $(pwd)/migrations:/flyway/sql flyway/flyway migrate \
+          -url="jdbc:postgresql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}" \
+          -user=${{ secrets.DB_USER }} \
+          -password=${{ secrets.DB_PASSWORD }} \
+          -baselineOnMigrate=true -baselineVersion=1
     ### Этот шаг оставьте без изменений
     - name: Download and setup autotests binaries
       run: |
