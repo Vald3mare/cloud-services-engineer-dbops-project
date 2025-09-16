@@ -19,7 +19,7 @@ jobs:
         
     - name: Postgres ready-check
       run: |
-        until docker exec postgres ps_isready -U user; do
+        until docker exec postgres pg_isready -U user; do
           sleep 1
         done
         echo "Postgres is ready!"
