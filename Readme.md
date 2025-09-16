@@ -5,10 +5,24 @@
 ```
 CREATE DATABASE store;
 ```
+DB_NAME=store
+DB_USER=store_user
+DB_PASS=pass
 
 ### Шаг 3
 ```
-CREATE ROLE store_user WITH LOGIN PASSWORD 'pass';
+-- Создание пользователя --
+CREATE USER store_user WITH PASSWORD 'pass';
 
-GRANT ALL PRIBELEGES ON DATABASE store TO store_user;
+-- Наделяем его всеми привелегиями на базу данных store --
+GRANT ALL PRIVILEGES ON DEATABASE store TO store_user;
+
+-- Назначаем все привилегии на схему public --
+GRANT ALL PRIVILEGES ON SCHEMA public TO store_user;
+
+-- Установка привилегий по умолчанию на будущие таблицы в схеме public --
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO store_user;
+
+-- Установка привилегий по умолчанию на будущие последовательности в схеме public --
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON SEQUENCES TO store_user;
 ```
