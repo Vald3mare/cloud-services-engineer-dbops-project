@@ -23,3 +23,19 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO stor
 -- Установка привилегий по умолчанию на будущие последовательности в схеме public --
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON SEQUENCES TO store_user;
 ```
+
+### Шаг 10
+```
+-- Запрос, который показывает колличество проданных сосисок на предыдущей неделе
+SELECT
+    o.date_created,
+    SUM(op.quantity)
+FROM
+    orders AS o
+    JOIN order_product AS op ON o.id = op.order_id
+WHERE
+    o.status = 'shipped'
+    AND o.date_created > (CURRENT_DATE - INTERVAL '7 DAYS')
+GROUP BY
+    o.date_created;
+```
