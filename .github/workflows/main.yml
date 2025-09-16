@@ -10,6 +10,25 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Start PostgreSQL with docker compose
+      run: |
+        echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" > .env  
+        echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+        echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
+        docker compose up -d
+        
+    - name: Postgres ready-check
+      run: |
+        until docker exec postgres ps_isready -U user; do
+          sleep 1
+        done
+        echo "Postgres is ready!"
+      
+      #### Самый первый шаг из ридмишки
+    - name: DB initialize
+      run: |
+        docker exec -u postgres postgres psql -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -c "CREATE DATABASE ${{ secrets.DB_NAME }}"
+
     #### Добавьте шаг с Flyway-миграциями
     
 
