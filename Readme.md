@@ -5,9 +5,6 @@
 ```
 CREATE DATABASE store;
 ```
-DB_NAME=store
-DB_USER=store_user
-DB_PASS=pass
 
 ### Шаг 3
 ```
